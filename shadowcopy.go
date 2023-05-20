@@ -1,4 +1,4 @@
-package pkg
+package shadow_copy
 
 import (
 	"fmt"
