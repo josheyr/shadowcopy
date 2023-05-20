@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/slices"
 	"os/exec"
+	"time"
 )
 
 type ShadowCopy struct {
@@ -52,10 +53,27 @@ func NewShadowCopy() (*ShadowCopy, error) {
 	}(createResult)
 
 	shadowIDsAfter := listShadowCopies(typeResult)
+	
+	var tries = 15
 
-	shadowCopyID := findNewShadowCopyID(shadowIDsBefore, shadowIDsAfter)
+	for {
 
-	return shadowCopyID, nil
+		shadowCopyID := findNewShadowCopyID(shadowIDsBefore, shadowIDsAfter)
+
+		if shadowCopyID != nil {
+			return shadowCopyID, nil
+		}
+
+		shadowIDsAfter = listShadowCopies(typeResult)
+		// sleep for 1 second
+		time.Sleep(1 * time.Second)
+
+		tries--
+
+		if tries == 0 {
+			return nil, fmt.Errorf("failed to find new shadow copy ID")
+		}
+	}
 }
 
 func connectToWMI() (*ole.IDispatch, error) {
