@@ -1,5 +1,5 @@
 # shadowcopy
-Shadowcopy allows you to easily create Volume Shadow Copies using WMI API in Golang. Tested on Windows 11
+Shadowcopy allows you to easily create Volume Shadow Copies using WMI API in Golang. Tested on Windows 11. For now it just does C: drive
 
 ```go
 	shadowCopy, err := NewShadowCopy()
